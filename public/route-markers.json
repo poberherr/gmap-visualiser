@@ -12,4 +12,9 @@
     "lat": 57.85,
     "lng": 14.55,
     "content":"test content3"
+},
+{
+    "lat": 57.80,
+    "lng": 14.50,
+    "content":"test content4"
 }]
