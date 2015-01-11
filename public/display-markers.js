@@ -13,7 +13,6 @@ function initialize() {
     var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
     allMarkers = getMarkersFromJsonFile();
-    console.log('allMarkers:' + allMarkers);
     addAllMarkers(allMarkers, map);
 }
 
@@ -29,7 +28,6 @@ function getMarkersFromJsonFile(){
                 marker = data;
             }
         });
-        console.log('marker' + marker);
         return marker;
     })();
     return marker;
@@ -37,19 +35,49 @@ function getMarkersFromJsonFile(){
 
 function addAllMarkers(markers, map){
     //loop between each of the json elements
+    console.log(markers);
     for (var i = 0, length = markers.length; i < length; i++) {
-        var data = markers[i],
+        var data = markers[i];
+        var gMapMarker;
         latLng = new google.maps.LatLng(data.lat, data.lng);
 
+
+        // if type not defined use standart marker
         // Creating a marker and putting it on the map
-        var marker = new google.maps.Marker({
-            position: latLng,
-            map: map,
-            title: data.content
-        });
-        infoBox(map, marker, data);
+        if (typeof data.type != 'undefined') {
+            gMapMarker = new google.maps.Marker({
+                position: latLng,
+                map: map,
+                icon: icons[data.type].icon,
+                title: data.content
+            });
+        } else {
+            gMapMarker = new google.maps.Marker({
+                position: latLng,
+                map: map,
+                title: data.content
+            });
+        }
+        infoBox(map, gMapMarker, data);
     }
 }
+
+var icons = {
+    camping: {
+        icon: 'https://cdn3.iconfinder.com/data/icons/outdoor-and-camping/80/Camping_icons-16-20.png'
+    },
+    motorbike: {
+        icon: 'https://cdn2.iconfinder.com/data/icons/command-control-vehicles/24/0001-20.png'
+    }
+};
+
+// function addMarker(feature) {
+//     var marker = new google.maps.Marker({
+//         position: feature.position,
+//         // icon: icons[feature.type].icon,
+//         map: map
+//     });
+// }
 
 function infoBox(map, marker, data) {
     var infoWindow = new google.maps.InfoWindow();

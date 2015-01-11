@@ -1,7 +1,8 @@
 [{
-    "lat": 57.95,
+    "lat": 58.00,
     "lng": 14.65,
-    "content":"test content1"
+    "type": "camping",
+    "content":"Here we were camping wooop woop"
 },
 {
     "lat": 57.9,
@@ -11,10 +12,11 @@
 {
     "lat": 57.85,
     "lng": 14.55,
-    "content":"test content3"
+    "type": "motorbike",
+    "content":"Driving here was really xtreme!"
 },
 {
-    "lat": 57.80,
+    "lat": 57.60,
     "lng": 14.50,
     "content":"test content4"
 }]
