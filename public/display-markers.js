@@ -71,14 +71,9 @@ var icons = {
     }
 };
 
-// function addMarker(feature) {
-//     var marker = new google.maps.Marker({
-//         position: feature.position,
-//         // icon: icons[feature.type].icon,
-//         map: map
-//     });
-// }
 
+// This is the marker for the Infobox
+// Every InfoBox has a listener for on click events
 function infoBox(map, marker, data) {
     var infoWindow = new google.maps.InfoWindow();
     // Attaching a click event to the current marker
