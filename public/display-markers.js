@@ -12,11 +12,13 @@ function initialize() {
 
     var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
-    setMarkers(center, map);
+    allMarkers = getMarkersFromJsonFile();
+    console.log('allMarkers:' + allMarkers);
+    addAllMarkers(allMarkers, map);
 }
 
-function setMarkers(center, map) {
-    var json = (function () {
+function getMarkersFromJsonFile(){
+    var marker = (function () {
         var json = null;
         $.ajax({
             'async': false,
@@ -24,15 +26,19 @@ function setMarkers(center, map) {
             'url': "route-markers.json",
             'dataType': "json",
             'success': function (data) {
-                json = data;
+                marker = data;
             }
         });
-        return json;
+        console.log('marker' + marker);
+        return marker;
     })();
+    return marker;
+}
 
+function addAllMarkers(markers, map){
     //loop between each of the json elements
-    for (var i = 0, length = json.length; i < length; i++) {
-        var data = json[i],
+    for (var i = 0, length = markers.length; i < length; i++) {
+        var data = markers[i],
         latLng = new google.maps.LatLng(data.lat, data.lng);
 
         // Creating a marker and putting it on the map
@@ -43,8 +49,6 @@ function setMarkers(center, map) {
         });
         infoBox(map, marker, data);
     }
-
-    // circle.bindTo('center', marker, 'position');
 }
 
 function infoBox(map, marker, data) {
