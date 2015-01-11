@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>display-markers.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>display-markers.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initialize</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">var</span> latitude = <span class="hljs-number">57.95</span>,
+    longitude = <span class="hljs-number">14.65</span>,
+    radius = <span class="hljs-number">8000</span>, <span class="hljs-comment">//how is this set up</span>
+    center = <span class="hljs-keyword">new</span> google.maps.LatLng(latitude,longitude),
+    bounds = <span class="hljs-keyword">new</span> google.maps.Circle({center: center, radius: radius}).getBounds(),
+    mapOptions = {
+        center: center,
+        zoom: <span class="hljs-number">9</span>,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        scrollwheel: <span class="hljs-literal">false</span>
+    };
+
+    <span class="hljs-keyword">var</span> map = <span class="hljs-keyword">new</span> google.maps.Map(<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"map-canvas"</span>), mapOptions);
+
+    setMarkers(center, radius, map);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setMarkers</span><span class="hljs-params">(center, radius, map)</span> </span>{
+    <span class="hljs-keyword">var</span> json = (<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">var</span> json = <span class="hljs-literal">null</span>;
+        $.ajax({
+            <span class="hljs-string">'async'</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-string">'global'</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-string">'url'</span>: <span class="hljs-string">"route-markers.json"</span>,
+            <span class="hljs-string">'dataType'</span>: <span class="hljs-string">"json"</span>,
+            <span class="hljs-string">'success'</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(data)</span> </span>{
+                json = data;
+            }
+        });
+        <span class="hljs-keyword">return</span> json;
+    })();
+
+    <span class="hljs-keyword">var</span> circle = <span class="hljs-keyword">new</span> google.maps.Circle({
+        strokeColor: <span class="hljs-string">'#000000'</span>,
+        strokeOpacity: <span class="hljs-number">0.25</span>,
+        strokeWeight: <span class="hljs-number">1.0</span>,
+        fillColor: <span class="hljs-string">'#ffffff'</span>,
+        fillOpacity: <span class="hljs-number">0.1</span>,
+        clickable: <span class="hljs-literal">false</span>,
+        map: map,
+        center: center,
+        radius: radius
+    });
+    <span class="hljs-keyword">var</span> bounds = circle.getBounds();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>loop between each of the json elements</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, length = json.length; i &lt; length; i++) {
+        <span class="hljs-keyword">var</span> data = json[i],
+        latLng = <span class="hljs-keyword">new</span> google.maps.LatLng(data.lat, data.lng);
+
+
+
+        <span class="hljs-keyword">if</span>(bounds.contains(latLng)) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Creating a marker and putting it on the map</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">var</span> marker = <span class="hljs-keyword">new</span> google.maps.Marker({
+                position: latLng,
+                map: map,
+                title: data.content
+            });
+            infoBox(map, marker, data);
+        }
+    }
+
+    circle.bindTo(<span class="hljs-string">'center'</span>, marker, <span class="hljs-string">'position'</span>);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">infoBox</span><span class="hljs-params">(map, marker, data)</span> </span>{
+    <span class="hljs-keyword">var</span> infoWindow = <span class="hljs-keyword">new</span> google.maps.InfoWindow();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Attaching a click event to the current marker</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    google.maps.event.addListener(marker, <span class="hljs-string">"click"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e)</span> </span>{
+        infoWindow.setContent(data.content);
+        infoWindow.open(map, marker);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Creating a closure to retain the correct data
+Note how I pass the current data in the loop into the closure (marker, data)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(marker, data)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Attaching a click event to the current marker</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        google.maps.event.addListener(marker, <span class="hljs-string">"click"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e)</span> </span>{
+            infoWindow.setContent(data.content);
+            infoWindow.open(map, marker);
+        });
+    })(marker, data);
+}
+
+google.maps.event.addDomListener(<span class="hljs-built_in">window</span>, <span class="hljs-string">'load'</span>, initialize);</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
