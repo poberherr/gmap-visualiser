@@ -19,8 +19,9 @@ var alphabet = [
     'ü', 'é', 'â', 'ä'
 ];
 
-GeoConverter = function () {
-
+GeoConverter = function (maxNeg, decimalValue) {
+    this.maxNeg = maxNeg;
+    this.decimalValue = decimalValue;
 };
 
 GeoConverter.prototype.encode = function (geoCoord) {
@@ -53,11 +54,9 @@ GeoConverter.prototype.decode = function (codeString) {
     return result / this.decimalValue - this.maxNeg;
 };
 
-GeoConverter.prototype.decimalValue = 200000;
-GeoConverter.prototype.maxNeg = 180;
 GeoConverter.prototype.numChars = 4;
 
-
+// Helper function
 var valueOfChar = function (c) {
     var i;
     for (i = 0; i < alphabet.length; i++) {
@@ -66,16 +65,10 @@ var valueOfChar = function (c) {
     return 0;
 };
 
-var newConverter = function (maxNeg, decimalValue) {
-    var result = new GeoConverter();
-    result.maxNeg = maxNeg;
-    result.decimalValue = decimalValue;
-    return result;
-};
-
+// Export
 var converters = {
-    latConverter: newConverter(90, 500000),
-    longConverter: newConverter(180, 200000)
+    latConverter: new GeoConverter(90, 500000),
+    longConverter: new GeoConverter(180, 200000)
 };
 
 module.exports = converters;
