@@ -72,10 +72,11 @@ var icons = {
 };
 
 
+var infoWindow = new google.maps.InfoWindow();
 // This is the marker for the Infobox
 // Every InfoBox has a listener for on click events
 function infoBox(map, marker, data) {
-    var infoWindow = new google.maps.InfoWindow();
+    
     // Attaching a click event to the current marker
     google.maps.event.addListener(marker, "click", function(e) {
         infoWindow.setContent(data.content);
